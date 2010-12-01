@@ -1,0 +1,35 @@
+
+/home/mukka/workspace/project/etags-mode/basedir.el,154
+(defun basedir-vcs-directory-p 37,1147
+(defun basedir-root-vcs-directory-p 49,1602
+(defun basedir-of 53,1751
+(defun basedir-of-current-buffer 62,2019
+
+/home/mukka/workspace/project/etags-mode/etags-mode.el,1054
+(defgroup etags-mode 49,1422
+(defcustom etags-major-modes53,1507
+(defcustom etags-bin-alist66,1959
+(defcustom etags-default-bin 75,2263
+(defcustom etags-mode-auto-generate-tags-if-absent 81,2436
+(defcustom etags-mode-use-tags-existing-directory 86,2606
+(defvar etags-mode-map92,2786
+(define-minor-mode etags-minor-mode98,2945
+(defvar etags-file-name 106,3113
+(defun etags-mode-enable-if-tags-exists 111,3205
+(define-global-minor-mode global-etags-mode122,3639
+(defvar etags-mode-target-regex-alist126,3758
+(defvar etags-mode-target-regex 133,3979
+(defvar etags-dir 138,4113
+(defvar etags-bin 143,4207
+(defvar etags-buffer 149,4393
+(defun etags-mode-start 152,4469
+(defun etags-file 167,5080
+(defun etags-builder-of-file 170,5165
+(defun etags-run 176,5341
+(defun etags-mode-set-dir 181,5465
+(defun etags-set-bin 198,6106
+(defun etags-build-result 203,6251
+(defun etags-build-tags-of-all 210,6501
+(defun etags-rebuild-tags-of-all 222,7083
+(defun etags-build-tags-of-file 227,7210
+(defun etags-build-tags-of-current-file 237,7697
