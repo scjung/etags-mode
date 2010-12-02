@@ -91,7 +91,7 @@ without asking."
 
 (defvar etags-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "\C-c\C-t" 'etags-build-tags-of-all)
+    (define-key map "\C-c\C-e" 'etags-build-tags-of-all)
     map)
   "Keymap used in 'etags-mode'")
 
@@ -126,8 +126,8 @@ without asking."
 (defvar etags-mode-target-regex-alist
   '((cc-mode         . ".*\.[cChH]\(pp)?")
     (emacs-lisp-mode . ".*\.el")
-    (tuareg-mode     . ".*\.ml.*")
-    (caml-mode       . ".*\.ml.*")
+    (tuareg-mode     . ".*\\.ml")
+    (caml-mode       . ".*\\.ml")
     (php-mode        . ".*\.php")))
 
 (defvar etags-mode-target-regex nil
@@ -180,20 +180,19 @@ third-party TAGS builder, such as otags for Objective-Caml.")
 
 (defun etags-mode-set-dir ()
   (let ((dir (basedir-of-current-buffer)))
-    (if dir
-        (progn
-          (setq etags-dir
-                (if (file-exists-p (concat (file-name-as-directory dir)
-                                           etags-file-name))
-                    dir
-                  (expand-file-name
-                   (file-name-directory
-                    (if dir
-                        dir
-                      (let ((insert-default-directory t))
-                        (read-directory-name "Directory: " nil nil t)))))))
-          (add-to-list 'tags-table-list (etags-file)))
-      (error "No base directory"))))
+    (setq etags-dir
+          (if (and dir
+                   (file-exists-p (concat (file-name-as-directory dir)
+                                          etags-file-name)))
+              dir
+            (expand-file-name
+             (file-name-as-directory
+              (if dir
+                  dir
+                (let ((insert-default-directory t))
+                  (read-directory-name "Directory: " nil nil t)))))))
+    (message (concat "TAGS directory: " etags-dir))
+    (add-to-list 'tags-table-list (etags-file))))
 
 (defun etags-set-bin ()
   (let ((bin (cdr (assoc major-mode etags-bin-alist))))
@@ -209,14 +208,18 @@ third-party TAGS builder, such as otags for Objective-Caml.")
 
 (defun etags-build-tags-of-all ()
   (interactive)
-  (message (format "Building %s for all files..." etags-file-name))
+  (message (format "Building %s for %s in %s..."
+                   etags-file-name etags-mode-target-regex etags-dir))
+  (when (buffer-live-p (get-buffer etags-buffer)) (kill-buffer etags-buffer))
   (let ((proc (start-process "etags-build-tags-of-all"
                              etags-buffer
                              "find" (shell-quote-argument etags-dir) "-regex"
                              etags-mode-target-regex
+                             "-print"
                              "-exec" (shell-quote-argument etags-bin)
                              "-o" (shell-quote-argument (etags-file))
-                             "{}" "+")))
+                             "{}" "+"
+                             )))
     (set-process-sentinel proc 'etags-build-result)))
 
 (defun etags-rebuild-tags-of-all ()
